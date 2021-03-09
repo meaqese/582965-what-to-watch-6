@@ -1,7 +1,7 @@
 # Личный проект «Что посмотреть» [![Build status][travis-image]][travis-url]
 
 * Студент: [Big Boy](https://up.htmlacademy.ru/react/6/user/582965).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Федин](https://htmlacademy.ru/profile/id1599231).
 
 ---
 
