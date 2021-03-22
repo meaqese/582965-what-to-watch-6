@@ -1,9 +1,11 @@
 import React from "react";
 
-const Player = () => {
+import {types} from "../../types";
+
+const Player = ({movie}) => {
   return (
     <div className="player">
-      <video src="#" className="player__video" poster="img/player-poster.jpg"/>
+      <video src={movie.videoLink} className="player__video" poster={movie.posterImage}/>
 
       <button type="button" className="player__exit">Exit</button>
 
@@ -36,5 +38,10 @@ const Player = () => {
     </div>
   );
 };
+
+Player.propTypes = {
+  movie: types.movie
+};
+
 
 export default Player;

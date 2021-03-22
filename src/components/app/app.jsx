@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+
+import {types} from "../../types";
 
 import Main from "../main/main";
 import SignIn from "../sign-in/sign-in";
@@ -21,16 +22,16 @@ const App = ({movies}) => {
         <SignIn/>
       </Route>
       <Route path="/mylist" exact>
-        <MyList/>
+        <MyList movies={movies}/>
       </Route>
       <Route path="/films/:id" exact>
         <MoviePage/>
       </Route>
       <Route path="/films/:id/review" exact>
-        <AddReview/>
+        <AddReview movie={movies[0]}/>
       </Route>
       <Route path="/player/:id" exact>
-        <Player/>
+        <Player movie={movies[0]}/>
       </Route>
       <Route>
         <NotFound/>
@@ -40,13 +41,7 @@ const App = ({movies}) => {
 };
 
 App.propTypes = {
-  movies: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        genre: PropTypes.string.isRequired,
-        date: PropTypes.number.isRequired
-      })
-  ).isRequired
+  movies: types.movies,
 };
 
 

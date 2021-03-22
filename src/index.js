@@ -1,15 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 import App from "./components/app/app";
 
-
-const movies = [
-  {
-    name: `Name404`,
-    genre: `Action`,
-    date: 2022,
-  }
-];
+import {movies} from "./mocks/movies";
 
 
 ReactDOM.render(
