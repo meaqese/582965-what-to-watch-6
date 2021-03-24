@@ -1,7 +1,8 @@
 import React from "react";
-import MovieList from "../movie-list/movie-list";
+import PropTypes from 'prop-types';
+import movieProp from '../movie-card/movie-card.prop';
 
-import {types} from "../../types";
+import MovieList from "../movie-list/movie-list";
 
 const Main = ({movies}) => {
   return <>
@@ -123,7 +124,7 @@ const Main = ({movies}) => {
 };
 
 Main.propTypes = {
-  movies: types.movies
+  movies: PropTypes.arrayOf(movieProp).isRequired
 };
 
 export default Main;

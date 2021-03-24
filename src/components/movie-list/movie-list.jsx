@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
+import PropTypes from "prop-types";
+import movieProp from '../movie-card/movie-card.prop';
 
 import MovieCard from "../movie-card/movie-card";
 
-import {types} from "../../types";
 
 const MovieList = ({movies}) => {
   const setMovie = useState(0)[1];
@@ -16,7 +17,7 @@ const MovieList = ({movies}) => {
 
 
 MovieList.propTypes = {
-  movies: types.movies
+  movies: PropTypes.arrayOf(movieProp).isRequired
 };
 
 
