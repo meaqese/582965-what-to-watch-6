@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
-
-import {types} from "../../types";
+import PropTypes from 'prop-types';
+import movieProp from '../movie-card/movie-card.prop';
 
 import Main from "../main/main";
 import SignIn from "../sign-in/sign-in";
@@ -41,7 +41,7 @@ const App = ({movies}) => {
 };
 
 App.propTypes = {
-  movies: types.movies,
+  movies: PropTypes.arrayOf(movieProp).isRequired,
 };
 
 

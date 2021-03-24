@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from 'react-router-dom';
+import movieProp from '../movie-card/movie-card.prop';
 
-import {types} from "../../types";
 import AddReviewForm from "../add-review-form/add-review-form";
 
 
@@ -55,7 +55,7 @@ const AddReview = ({movie}) => {
 };
 
 AddReview.propTypes = {
-  movie: types.movie
+  movie: movieProp
 };
 
 

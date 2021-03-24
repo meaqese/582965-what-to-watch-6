@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const movie = PropTypes.shape({
+export default PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   previewImage: PropTypes.string.isRequired,
@@ -20,7 +20,3 @@ const movie = PropTypes.shape({
   isFavorite: PropTypes.bool.isRequired
 });
 
-export const types = {
-  movie,
-  movies: PropTypes.arrayOf(movie).isRequired
-};

@@ -1,8 +1,10 @@
 import React from "react";
 import {Link} from 'react-router-dom';
+import PropTypes from "prop-types";
+import movieProp from "../movie-card/movie-card.prop";
+
 import MovieList from "../movie-list/movie-list";
 
-import {types} from "../../types";
 
 const MyList = ({movies}) => {
   return (
@@ -49,7 +51,7 @@ const MyList = ({movies}) => {
 };
 
 MyList.propTypes = {
-  movies: types.movies
+  movies: PropTypes.arrayOf(movieProp).isRequired
 };
 
 export default MyList;

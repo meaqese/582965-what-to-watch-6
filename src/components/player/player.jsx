@@ -1,6 +1,6 @@
 import React from "react";
 
-import {types} from "../../types";
+import movieProp from "../movie-card/movie-card.prop";
 
 const Player = ({movie}) => {
   return (
@@ -40,7 +40,7 @@ const Player = ({movie}) => {
 };
 
 Player.propTypes = {
-  movie: types.movie
+  movie: movieProp
 };
 
 
