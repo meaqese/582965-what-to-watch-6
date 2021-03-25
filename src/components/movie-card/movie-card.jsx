@@ -8,7 +8,8 @@ const MovieCard = ({movie: {id, name, previewImage, previewVideoLink}}) => {
 
   return (
     <article className="small-movie-card catalog__movies-card">
-      <div className="small-movie-card__image" onMouseEnter={() => setPlaying(true)} onMouseLeave={() => setPlaying(false)}>
+      <div className="small-movie-card__image"
+        onMouseEnter={() => setPlaying(true)} onMouseLeave={() => setPlaying(false)}>
         <VideoPlayer movie={{previewImage, previewVideoLink}} isPlaying={isPlaying}/>
       </div>
       <h3 className="small-movie-card__title">
