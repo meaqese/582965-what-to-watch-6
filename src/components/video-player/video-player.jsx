@@ -15,11 +15,10 @@ const VideoPlayer = ({isPlaying, movie}) => {
         videoRef.current.src = movie.previewVideoLink;
         videoRef.current.play();
       }
-
-      clearTimeout(timer);
     }, 1000);
 
     return () => {
+      clearTimeout(timer);
       videoRef.current.pause();
       videoRef.current.src = ``;
     };
