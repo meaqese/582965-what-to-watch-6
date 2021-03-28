@@ -44,5 +44,4 @@ App.propTypes = {
   movies: PropTypes.arrayOf(movieProp).isRequired,
 };
 
-
 export default App;
