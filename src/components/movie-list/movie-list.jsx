@@ -7,12 +7,19 @@ import MovieCard from "../movie-card/movie-card";
 
 const MovieList = ({movies, count = 8}) => {
   const setMovie = useState(0)[1];
+  const [movieCount, setMovieCount] = useState(count);
 
-  return (
+  return <>
     <div className="catalog__movies-list">
-      { movies.slice(0, count).map((value, index) => <MovieCard key={value.name + index} movie={value} onMouseEnter={() => setMovie(value.id)}/>) }
+      { movies.slice(0, movieCount).map((value, index) => <MovieCard key={value.name + index} movie={value} onMouseEnter={() => setMovie(value.id)}/>) }
     </div>
-  );
+
+    {movies.length > movieCount ? <>
+      <div className="catalog__more">
+        <button className="catalog__button" type="button" onClick={() => setMovieCount(movieCount + count)}>Show more</button>
+      </div>
+    </> : null}
+  </>;
 };
 
 

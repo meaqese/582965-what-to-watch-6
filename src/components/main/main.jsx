@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from 'prop-types';
-import movieProp from '../movie-card/movie-card.prop';
 
 import GenreList from "../genre-list/genre-list";
 
@@ -67,10 +65,6 @@ const Main = () => {
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
         <GenreList/>
-
-        <div className="catalog__more">
-          <button className="catalog__button" type="button">Show more</button>
-        </div>
       </section>
 
       <footer className="page-footer">
@@ -88,10 +82,6 @@ const Main = () => {
       </footer>
     </div>
   </>;
-};
-
-Main.propTypes = {
-  movies: PropTypes.arrayOf(movieProp).isRequired
 };
 
 export default Main;
