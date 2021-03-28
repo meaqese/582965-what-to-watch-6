@@ -2,7 +2,6 @@ import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import movieProp from '../movie-card/movie-card.prop';
-import {connect} from 'react-redux';
 
 import Main from "../main/main";
 import SignIn from "../sign-in/sign-in";
