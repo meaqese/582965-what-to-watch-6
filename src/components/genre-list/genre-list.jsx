@@ -8,15 +8,16 @@ import MovieList from "../movie-list/movie-list";
 import {ActionCreator} from "../../store/action";
 
 
-const GenreList = ({genre, movies, changeGenre, getMovies}) => {
+const GenreList = ({genre, movies, changeGenre}) => {
   const genres = Array.from(new Set([`All genres`, ...movies.map((movie) => movie.genre)]));
+  const filteredMovies = genre === genres[0] ? movies : movies.filter((value) => value.genre === genre);
 
   const handleClick = (evt, value) => {
     evt.preventDefault();
 
     changeGenre(value);
   };
-  console.log(getMovies());
+
   return <>
     <ul className="catalog__genres-list">
       {genres.map((value, index) => (
@@ -26,7 +27,7 @@ const GenreList = ({genre, movies, changeGenre, getMovies}) => {
       ))}
     </ul>
 
-    <MovieList movies={getMovies()}/>
+    <MovieList movies={filteredMovies}/>
   </>;
 };
 
@@ -34,21 +35,17 @@ GenreList.propTypes = {
   genre: PropTypes.string.isRequired,
   movies: PropTypes.arrayOf(movieProp),
   changeGenre: PropTypes.func.isRequired,
-  getMovies: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   genre: state.genre,
-  movies: state.movies
+  movies: state.movies,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   changeGenre(genre) {
     dispatch(ActionCreator.changeGenre(genre));
   },
-  getMovies() {
-    return ActionCreator.getMovies();
-  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GenreList);

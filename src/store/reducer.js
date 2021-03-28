@@ -14,14 +14,6 @@ export const reducer = (state = initialState, action) => {
         ...initialState,
         genre: action.payload
       };
-    case ActionType.GET_MOVIES:
-      if (state.genre === initialState.genre) {
-        return {...initialState};
-      }
-      return {
-        ...initialState,
-        movies: movies.filter(({genre}) => genre === state.genre)
-      };
   }
 
   return state;

@@ -2,10 +2,9 @@ import React from "react";
 import PropTypes from 'prop-types';
 import movieProp from '../movie-card/movie-card.prop';
 
-import MovieList from "../movie-list/movie-list";
 import GenreList from "../genre-list/genre-list";
 
-const Main = ({movies}) => {
+const Main = () => {
   return <>
     <section className="movie-card">
       <div className="movie-card__bg">
