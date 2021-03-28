@@ -6,14 +6,13 @@ import {composeWithDevTools} from "redux-devtools-extension";
 
 import App from "./components/app/app";
 
-import {movies} from "./mocks/movies";
 import {reducer} from "./store/reducer";
 
 const store = createStore(reducer, composeWithDevTools());
 
 ReactDOM.render(
     <Provider store={store}>
-      <App movies={movies} />
+      <App movies={store.getState().movies}/>
     </Provider>,
     document.querySelector(`#root`)
 );
