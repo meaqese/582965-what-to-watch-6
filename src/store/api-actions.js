@@ -1,27 +1,6 @@
 import {ActionCreator} from "./action";
+import {snakeToCamel} from "../utils";
 
-const snakeToCamel = (object) => {
-  const countOf = (str, symbol) => {
-    const regex = new RegExp(symbol + `*`, `g`);
-    return (symbol.match(regex) || []).length;
-  };
-
-  const adaptedToCamel = {};
-  Object.entries(object).forEach(([key, value]) => {
-    for (let i = 0; i < countOf(key, `_`); i++) {
-      const indexOfUnderline = key.indexOf(`_`);
-
-      if (indexOfUnderline > -1) {
-        key = key.replace(`_`, ``);
-        key = key.substr(0, indexOfUnderline) + key[indexOfUnderline].toUpperCase() + key.substr(indexOfUnderline + key[indexOfUnderline].length);
-      }
-    }
-
-    adaptedToCamel[key] = value;
-  });
-
-  return adaptedToCamel;
-};
 
 const adaptToClient = (movies) => {
   return movies.map((movie) => snakeToCamel(movie));
@@ -29,4 +8,18 @@ const adaptToClient = (movies) => {
 
 export const fetchMovies = () => (dispatch, _getState, api) => {
   api.get(`/films`).then(({data}) => dispatch(ActionCreator.loadMovies(adaptToClient(data))));
+};
+
+export const checkAuth = () => (dispatch, _getState, api) => {
+  api.get(`/login`)
+      .then(() => dispatch(ActionCreator.setAuthStatus(true)))
+      .catch(() => {});
+};
+
+
+export const login = ({email, password}) => (dispatch, _getState, api) => {
+  api.post(`/login`, {email, password}).then(() => {
+    dispatch(ActionCreator.setAuthStatus(true));
+    dispatch(ActionCreator.setUserEmail(email));
+  });
 };

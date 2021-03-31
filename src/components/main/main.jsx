@@ -1,8 +1,11 @@
 import React from "react";
+import {useHistory} from 'react-router-dom';
 
 import GenreList from "../genre-list/genre-list";
 
 const Main = () => {
+  const history = useHistory();
+
   return <>
     <section className="movie-card">
       <div className="movie-card__bg">
@@ -48,7 +51,7 @@ const Main = () => {
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button">
+              <button className="btn btn--list movie-card__button" type="button" onClick={() => history.push(`/mylist`)}>
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"/>
                 </svg>
