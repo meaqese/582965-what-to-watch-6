@@ -13,7 +13,7 @@ const MovieCard = ({movie: {id, name, previewImage, previewVideoLink}}) => {
         <VideoPlayer movie={{previewImage, previewVideoLink}} isPlaying={isPlaying}/>
       </div>
       <h3 className="small-movie-card__title">
-        <Link className="small-movie-card__link" to={`films/${id}`}>{name}</Link>
+        <Link className="small-movie-card__link" to={`/films/${id}`}>{name}</Link>
       </h3>
     </article>
   );

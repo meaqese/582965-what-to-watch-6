@@ -26,8 +26,8 @@ const App = ({movies}) => {
       <PrivateRoute path="/mylist" exact
         render={() => <MyList movies={movies}/>}>
       </PrivateRoute>
-      <Route path="/films/:id" exact>
-        <MoviePage movie={movies[0]} similarMovies={movies}/>
+      <Route path="/films/:id" exact
+        render={({match: {params}}) => <MoviePage {...params}/>}>
       </Route>
       <PrivateRoute path="/films/:id/review" exact
         render={() => <AddReview movie={movies[0]}/>}>

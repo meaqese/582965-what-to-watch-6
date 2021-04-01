@@ -10,7 +10,7 @@ import {ActionCreator} from "../../store/action";
 import {fetchMovies} from "../../store/api-actions";
 
 
-const GenreList = ({genre, movies, changeGenre, onLoadData, isDataLoaded}) => {
+const GenreList = ({genre, movies, changeGenre, isDataLoaded, onLoadData}) => {
   const genres = Array.from(new Set([`All genres`, ...movies.map((movie) => movie.genre)]));
   const filteredMovies = genre === genres[0] ? movies : movies.filter((value) => value.genre === genre);
 

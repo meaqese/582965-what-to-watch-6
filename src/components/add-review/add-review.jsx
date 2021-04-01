@@ -1,11 +1,17 @@
 import React from "react";
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 import movieProp from '../movie-card/movie-card.prop';
 
 import AddReviewForm from "../add-review-form/add-review-form";
 
 
-const AddReview = ({movie}) => {
+const AddReview = ({movie, isAuthorized}) => {
+  if (!isAuthorized) {
+    return <Redirect to={`/login`}/>;
+  }
+
   return (
     <section className="movie-card movie-card--full">
       <div className="movie-card__header">
@@ -55,8 +61,13 @@ const AddReview = ({movie}) => {
 };
 
 AddReview.propTypes = {
-  movie: movieProp
+  movie: movieProp,
+  isAuthorized: PropTypes.bool.isRequired
 };
 
+const mapStateToProps = (state) => ({
+  isAuthorized: state.isAuthorized
+});
 
-export default AddReview;
+
+export default connect(mapStateToProps)(AddReview);
