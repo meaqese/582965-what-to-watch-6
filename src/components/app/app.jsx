@@ -1,5 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PrivateRoute from "../private-route/private-route";
 import PropTypes from 'prop-types';
 import movieProp from '../movie-card/movie-card.prop';
@@ -34,6 +35,8 @@ const App = ({movies}) => {
       <Route path="/player/:id" exact>
         <Player movie={movies[0]}/>
       </Route>
+      <Route path="/logout">
+      </Route>
       <Route>
         <NotFound/>
       </Route>
@@ -42,7 +45,11 @@ const App = ({movies}) => {
 };
 
 App.propTypes = {
-  movies: PropTypes.arrayOf(movieProp).isRequired,
+  movies: PropTypes.arrayOf(movieProp)
 };
 
-export default App;
+const mapStateToProps = (state) => ({
+  movies: state.movies
+});
+
+export default connect(mapStateToProps)(App);

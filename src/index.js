@@ -23,7 +23,7 @@ store.dispatch(checkAuth());
 
 ReactDOM.render(
     <Provider store={store}>
-      <App movies={store.getState().movies}/>
+      <App/>
     </Provider>,
     document.querySelector(`#root`)
 );

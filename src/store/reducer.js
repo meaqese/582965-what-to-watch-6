@@ -6,7 +6,7 @@ const initialState = {
   movies: [],
   isDataLoaded: false,
   isAuthorized: false,
-  userEmail: ``
+  authInfo: {}
 };
 
 export const reducer = (state = initialState, action) => {
@@ -27,10 +27,10 @@ export const reducer = (state = initialState, action) => {
         ...state,
         isAuthorized: action.payload
       };
-    case ActionType.SET_USER_EMAIL:
+    case ActionType.SET_AUTH_INFO:
       return {
         ...state,
-        userEmail: action.payload
+        authInfo: action.payload
       };
   }
 

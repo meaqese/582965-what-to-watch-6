@@ -12,14 +12,17 @@ export const fetchMovies = () => (dispatch, _getState, api) => {
 
 export const checkAuth = () => (dispatch, _getState, api) => {
   api.get(`/login`)
-      .then(() => dispatch(ActionCreator.setAuthStatus(true)))
+      .then(({data}) => {
+        dispatch(ActionCreator.setAuthStatus(true));
+        dispatch(ActionCreator.setAuthInfo(snakeToCamel(data)));
+      })
       .catch(() => {});
 };
 
 
 export const login = ({email, password}) => (dispatch, _getState, api) => {
-  api.post(`/login`, {email, password}).then(() => {
+  api.post(`/login`, {email, password}).then(({data}) => {
     dispatch(ActionCreator.setAuthStatus(true));
-    dispatch(ActionCreator.setUserEmail(email));
+    dispatch(ActionCreator.setAuthInfo(snakeToCamel(data)));
   });
 };

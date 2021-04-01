@@ -1,9 +1,11 @@
 import React from "react";
-import {useHistory} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Link, useHistory} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import GenreList from "../genre-list/genre-list";
 
-const Main = () => {
+const Main = ({isAuthorized, avatarUrl}) => {
   const history = useHistory();
 
   return <>
@@ -24,9 +26,9 @@ const Main = () => {
         </div>
 
         <div className="user-block">
-          <div className="user-block__avatar">
-            <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-          </div>
+          {(isAuthorized === true) ? <div className="user-block__avatar">
+            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(`/mylist`)}/>
+          </div> : <Link to={`/login`}>Sign In</Link>}
         </div>
       </header>
 
@@ -87,4 +89,14 @@ const Main = () => {
   </>;
 };
 
-export default Main;
+Main.propTypes = {
+  isAuthorized: PropTypes.bool.isRequired,
+  avatarUrl: PropTypes.string.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  isAuthorized: state.isAuthorized,
+  avatarUrl: state.authInfo.avatarUrl
+});
+
+export default connect(mapStateToProps)(Main);
