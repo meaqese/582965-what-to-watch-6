@@ -1,8 +1,13 @@
 import React from "react";
+import {connect} from 'react-redux';
+import {Link, useHistory} from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import GenreList from "../genre-list/genre-list";
 
-const Main = () => {
+const Main = ({isAuthorized, avatarUrl}) => {
+  const history = useHistory();
+
   return <>
     <section className="movie-card">
       <div className="movie-card__bg">
@@ -21,9 +26,9 @@ const Main = () => {
         </div>
 
         <div className="user-block">
-          <div className="user-block__avatar">
-            <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-          </div>
+          {(isAuthorized === true) ? <div className="user-block__avatar">
+            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(`/mylist`)}/>
+          </div> : <Link to={`/login`}>Sign In</Link>}
         </div>
       </header>
 
@@ -48,7 +53,7 @@ const Main = () => {
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button">
+              <button className="btn btn--list movie-card__button" type="button" onClick={() => history.push(`/mylist`)}>
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"/>
                 </svg>
@@ -84,4 +89,14 @@ const Main = () => {
   </>;
 };
 
-export default Main;
+Main.propTypes = {
+  isAuthorized: PropTypes.bool.isRequired,
+  avatarUrl: PropTypes.string.isRequired
+};
+
+const mapStateToProps = (state) => ({
+  isAuthorized: state.isAuthorized,
+  avatarUrl: state.authInfo.avatarUrl
+});
+
+export default connect(mapStateToProps)(Main);

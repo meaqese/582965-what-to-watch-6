@@ -4,7 +4,9 @@ import {ActionType} from "./action";
 const initialState = {
   genre: `All genres`,
   movies: [],
-  isDataLoaded: false
+  isDataLoaded: false,
+  isAuthorized: false,
+  authInfo: {}
 };
 
 export const reducer = (state = initialState, action) => {
@@ -19,6 +21,16 @@ export const reducer = (state = initialState, action) => {
         ...state,
         movies: action.payload,
         isDataLoaded: true
+      };
+    case ActionType.SET_AUTH_STATUS:
+      return {
+        ...state,
+        isAuthorized: action.payload
+      };
+    case ActionType.SET_AUTH_INFO:
+      return {
+        ...state,
+        authInfo: action.payload
       };
   }
 
