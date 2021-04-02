@@ -26,3 +26,7 @@ export const login = ({email, password}) => (dispatch, _getState, api) => {
     dispatch(ActionCreator.setAuthInfo(snakeToCamel(data)));
   });
 };
+
+export const commentPost = ({id}) => (dispatch, _getState, api) => {
+  api.post(`/comments/${id}`).then();
+};

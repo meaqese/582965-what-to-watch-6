@@ -1,18 +1,39 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import movieProp from '../movie-card/movie-card.prop';
 
 import MovieList from "../movie-list/movie-list";
 import Tabs from "../tabs/tabs";
+import {fetchMovies} from "../../store/api-actions";
+import Loading from "../loading/loading";
+import NotFound from "../not-found/not-found";
 
 
-const MoviePage = ({movie, similarMovies}) => {
+const MoviePage = ({id, movies, isDataLoaded, isAuthorized, authInfo, onLoadData}) => {
+  const movieId = movies.findIndex((value) => value.id === +id);
+  if (movieId === -1 && isDataLoaded) {
+    return <NotFound/>;
+  }
+  const movie = movies[movieId];
+  const similarMovies = movies.filter((value) => value.genre === movie.genre && value !== movie);
+
+  useEffect(() => {
+    if (!isDataLoaded) {
+      onLoadData();
+    }
+  }, [isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <Loading/>;
+  }
+
   return <>
     <section className="movie-card movie-card--full">
       <div className="movie-card__hero">
         <div className="movie-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel"/>
+          <img src={movie.backgroundImage} alt={movie.name}/>
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -27,18 +48,18 @@ const MoviePage = ({movie, similarMovies}) => {
           </div>
 
           <div className="user-block">
-            <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
-            </div>
+            {isAuthorized ? <div className="user-block__avatar">
+              <img src={authInfo.avatarUrl} alt="User avatar" width="63" height="63"/>
+            </div> : <Link to={`/login`} className="btn">Sign In</Link>}
           </div>
         </header>
 
         <div className="movie-card__wrap">
           <div className="movie-card__desc">
-            <h2 className="movie-card__title">The Grand Budapest Hotel</h2>
+            <h2 className="movie-card__title">{movie.name}</h2>
             <p className="movie-card__meta">
-              <span className="movie-card__genre">Drama</span>
-              <span className="movie-card__year">2014</span>
+              <span className="movie-card__genre">{movie.genre}</span>
+              <span className="movie-card__year">{movie.released}</span>
             </p>
 
             <div className="movie-card__buttons">
@@ -54,7 +75,7 @@ const MoviePage = ({movie, similarMovies}) => {
                 </svg>
                 <span>My list</span>
               </button>
-              <a href="add-review.html" className="btn movie-card__button">Add review</a>
+              {isAuthorized && <Link to={`/films/${movie.id}/review`} className="btn movie-card__button">Add review</Link>}
             </div>
           </div>
         </div>
@@ -63,7 +84,7 @@ const MoviePage = ({movie, similarMovies}) => {
       <div className="movie-card__wrap movie-card__translate-top">
         <div className="movie-card__info">
           <div className="movie-card__poster movie-card__poster--big">
-            <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218" height="327"/>
+            <img src={movie.posterImage} alt={`${movie.name} poster`} width="218" height="327"/>
           </div>
 
           <Tabs movie={movie}/>
@@ -96,8 +117,25 @@ const MoviePage = ({movie, similarMovies}) => {
 };
 
 MoviePage.propTypes = {
-  movie: movieProp,
-  similarMovies: PropTypes.arrayOf(movieProp).isRequired
+  id: PropTypes.string.isRequired,
+  movies: PropTypes.arrayOf(movieProp).isRequired,
+  isDataLoaded: PropTypes.bool.isRequired,
+  isAuthorized: PropTypes.bool.isRequired,
+  authInfo: PropTypes.bool.isRequired,
+  onLoadData: PropTypes.func.isRequired
 };
 
-export default MoviePage;
+const mapStateToProps = (state) => ({
+  movies: state.movies,
+  isDataLoaded: state.isDataLoaded,
+  isAuthorized: state.isAuthorized,
+  authInfo: state.authInfo
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onLoadData() {
+    dispatch(fetchMovies());
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MoviePage);

@@ -28,7 +28,7 @@ const Main = ({isAuthorized, avatarUrl}) => {
         <div className="user-block">
           {(isAuthorized === true) ? <div className="user-block__avatar">
             <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(`/mylist`)}/>
-          </div> : <Link to={`/login`}>Sign In</Link>}
+          </div> : <Link to={`/login`} className="btn">Sign In</Link>}
         </div>
       </header>
 
