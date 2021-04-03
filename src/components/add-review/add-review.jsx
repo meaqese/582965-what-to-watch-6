@@ -1,15 +1,29 @@
-import React from "react";
-import {Link, Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
+import React, {useEffect} from "react";
+import {Link} from 'react-router-dom';
+import {useSelector, useDispatch} from "react-redux";
+import {AppRoute} from "../../const";
+import {format} from "../../utils";
+import {fetchMovies} from "../../store/api-actions";
 import PropTypes from 'prop-types';
-import movieProp from '../movie-card/movie-card.prop';
 
 import AddReviewForm from "../add-review-form/add-review-form";
+import Loading from "../loading/loading";
 
 
-const AddReview = ({movie, isAuthorized}) => {
-  if (!isAuthorized) {
-    return <Redirect to={`/login`}/>;
+const AddReview = ({id}) => {
+  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+  const dispatch = useDispatch();
+
+  const movie = movies.filter((value) => value.id === +id)[0];
+
+  useEffect(() => {
+    if (!isDataLoaded) {
+      dispatch(fetchMovies());
+    }
+  }, [isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <Loading/>;
   }
 
   return (
@@ -23,7 +37,7 @@ const AddReview = ({movie, isAuthorized}) => {
 
         <header className="page-header">
           <div className="logo">
-            <Link to="/" className="logo__link">
+            <Link to={AppRoute.ROOT} className="logo__link">
               <span className="logo__letter logo__letter--1">W</span>
               <span className="logo__letter logo__letter--2">T</span>
               <span className="logo__letter logo__letter--3">W</span>
@@ -33,7 +47,7 @@ const AddReview = ({movie, isAuthorized}) => {
           <nav className="breadcrumbs">
             <ul className="breadcrumbs__list">
               <li className="breadcrumbs__item">
-                <a href="movie-page.html" className="breadcrumbs__link">{movie.name}</a>
+                <Link to={format(AppRoute.MOVIE, {[`:id`]: movie.id})} className="breadcrumbs__link">{movie.name}</Link>
               </li>
               <li className="breadcrumbs__item">
                 <a className="breadcrumbs__link">Add review</a>
@@ -61,13 +75,8 @@ const AddReview = ({movie, isAuthorized}) => {
 };
 
 AddReview.propTypes = {
-  movie: movieProp,
-  isAuthorized: PropTypes.bool.isRequired
+  id: PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state) => ({
-  isAuthorized: state.isAuthorized
-});
 
-
-export default connect(mapStateToProps)(AddReview);
+export default AddReview;

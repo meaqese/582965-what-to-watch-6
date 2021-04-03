@@ -1,12 +1,12 @@
 import React from "react";
-import {connect} from 'react-redux';
-import {Link, useHistory} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
+import {useSelector} from "react-redux";
 
 import GenreList from "../genre-list/genre-list";
 
-const Main = ({isAuthorized, avatarUrl}) => {
-  const history = useHistory();
+const Main = ({onMyListClick}) => {
+  const {isAuthorized, authInfo: {avatarUrl}} = useSelector((state) => state.USER);
 
   return <>
     <section className="movie-card">
@@ -27,7 +27,7 @@ const Main = ({isAuthorized, avatarUrl}) => {
 
         <div className="user-block">
           {(isAuthorized === true) ? <div className="user-block__avatar">
-            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(`/mylist`)}/>
+            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={onMyListClick}/>
           </div> : <Link to={`/login`} className="btn">Sign In</Link>}
         </div>
       </header>
@@ -53,7 +53,7 @@ const Main = ({isAuthorized, avatarUrl}) => {
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button" onClick={() => history.push(`/mylist`)}>
+              <button className="btn btn--list movie-card__button" type="button" onClick={onMyListClick}>
                 <svg viewBox="0 0 19 20" width="19" height="20">
                   <use xlinkHref="#add"/>
                 </svg>
@@ -90,13 +90,8 @@ const Main = ({isAuthorized, avatarUrl}) => {
 };
 
 Main.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
-  avatarUrl: PropTypes.string.isRequired
+  onMyListClick: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => ({
-  isAuthorized: state.isAuthorized,
-  avatarUrl: state.authInfo.avatarUrl
-});
 
-export default connect(mapStateToProps)(Main);
+export default Main;

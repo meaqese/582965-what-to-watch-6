@@ -23,7 +23,7 @@ export const createAPI = (onUnauthorized) => {
     if (response.status === HttpCode.UNAUTHORIZED || response.status === HttpCode.BLANK_FIELD) {
       onUnauthorized();
 
-      throw error;
+      throw new Error(response.data.error);
     }
 
     throw error;

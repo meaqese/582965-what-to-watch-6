@@ -1,12 +1,27 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
-import PropTypes from "prop-types";
-import movieProp from "../movie-card/movie-card.prop";
+import {useSelector, useDispatch} from "react-redux";
 
 import MovieList from "../movie-list/movie-list";
+import {fetchMovies} from "../../store/api-actions";
+import Loading from "../loading/loading";
 
 
-const MyList = ({movies}) => {
+const MyList = () => {
+  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+  const {authInfo: {avatarUrl}} = useSelector((state) => state.USER);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isDataLoaded) {
+      dispatch(fetchMovies());
+    }
+  }, [isDataLoaded]);
+
+  if (!isDataLoaded) {
+    return <Loading/>;
+  }
+
   return (
     <div className="user-page">
       <header className="page-header user-page__head">
@@ -22,7 +37,7 @@ const MyList = ({movies}) => {
 
         <div className="user-block">
           <div className="user-block__avatar">
-            <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
+            <img src={avatarUrl} alt="User avatar" width="63" height="63"/>
           </div>
         </div>
       </header>
@@ -48,10 +63,6 @@ const MyList = ({movies}) => {
       </footer>
     </div>
   );
-};
-
-MyList.propTypes = {
-  movies: PropTypes.arrayOf(movieProp).isRequired
 };
 
 export default MyList;

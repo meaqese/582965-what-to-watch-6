@@ -1,5 +1,6 @@
-import {ActionCreator} from "./action";
-import {snakeToCamel} from "../utils";
+import {setAuthInfo, setAuthStatus, redirectToRoute, loadMovies} from "./action";
+import {APIRoute, AppRoute} from "../const";
+import {format, snakeToCamel} from "../utils";
 
 
 const adaptToClient = (movies) => {
@@ -7,26 +8,24 @@ const adaptToClient = (movies) => {
 };
 
 export const fetchMovies = () => (dispatch, _getState, api) => {
-  api.get(`/films`).then(({data}) => dispatch(ActionCreator.loadMovies(adaptToClient(data))));
+  api.get(APIRoute.MOVIES).then(({data}) => dispatch(loadMovies(adaptToClient(data))));
 };
 
 export const checkAuth = () => (dispatch, _getState, api) => {
-  api.get(`/login`)
-      .then(({data}) => {
-        dispatch(ActionCreator.setAuthStatus(true));
-        dispatch(ActionCreator.setAuthInfo(snakeToCamel(data)));
-      })
-      .catch(() => {});
+  api.get(APIRoute.LOGIN).then(({data}) => {
+    dispatch(setAuthStatus(true));
+    dispatch(setAuthInfo(snakeToCamel(data)));
+  }).catch(() => {});
 };
 
-
 export const login = ({email, password}) => (dispatch, _getState, api) => {
-  api.post(`/login`, {email, password}).then(({data}) => {
-    dispatch(ActionCreator.setAuthStatus(true));
-    dispatch(ActionCreator.setAuthInfo(snakeToCamel(data)));
+  api.post(APIRoute.LOGIN, {email, password}).then(({data}) => {
+    dispatch(setAuthStatus(true));
+    dispatch(setAuthInfo(snakeToCamel(data)));
+    dispatch(redirectToRoute(AppRoute.ROOT));
   });
 };
 
 export const commentPost = ({id}) => (dispatch, _getState, api) => {
-  api.post(`/comments/${id}`).then();
+  api.post(format(APIRoute.COMMENT, id)).then();
 };

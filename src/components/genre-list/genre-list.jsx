@@ -1,22 +1,24 @@
-import React, {useEffect} from 'react';
-import PropTypes from 'prop-types';
-import movieProp from '../movie-card/movie-card.prop';
-import {connect} from 'react-redux';
+import React, {useEffect, useMemo} from 'react';
+import {useSelector, useDispatch} from "react-redux";
 
 import MovieList from "../movie-list/movie-list";
 import Loading from "../loading/loading";
 
-import {ActionCreator} from "../../store/action";
+import {changeGenre as actionChangeGenre} from "../../store/action";
 import {fetchMovies} from "../../store/api-actions";
 
 
-const GenreList = ({genre, movies, changeGenre, isDataLoaded, onLoadData}) => {
-  const genres = Array.from(new Set([`All genres`, ...movies.map((movie) => movie.genre)]));
+const GenreList = () => {
+  const {genre} = useSelector((state) => state.PROCESSES);
+  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+  const dispatch = useDispatch();
+
+  const genres = useMemo(() => Array.from(new Set([`All genres`, ...movies.map((movie) => movie.genre)])), [movies]);
   const filteredMovies = genre === genres[0] ? movies : movies.filter((value) => value.genre === genre);
 
   useEffect(() => {
     if (!isDataLoaded) {
-      onLoadData();
+      dispatch(fetchMovies());
     }
   }, [isDataLoaded]);
 
@@ -27,7 +29,7 @@ const GenreList = ({genre, movies, changeGenre, isDataLoaded, onLoadData}) => {
   const handleClick = (evt, value) => {
     evt.preventDefault();
 
-    changeGenre(value);
+    dispatch(actionChangeGenre(value));
   };
 
   return <>
@@ -43,27 +45,5 @@ const GenreList = ({genre, movies, changeGenre, isDataLoaded, onLoadData}) => {
   </>;
 };
 
-GenreList.propTypes = {
-  genre: PropTypes.string.isRequired,
-  movies: PropTypes.arrayOf(movieProp),
-  changeGenre: PropTypes.func.isRequired,
-  onLoadData: PropTypes.func.isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
-};
 
-const mapStateToProps = (state) => ({
-  genre: state.genre,
-  movies: state.movies,
-  isDataLoaded: state.isDataLoaded
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  changeGenre(genre) {
-    dispatch(ActionCreator.changeGenre(genre));
-  },
-  onLoadData() {
-    dispatch(fetchMovies());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(GenreList);
+export default GenreList;

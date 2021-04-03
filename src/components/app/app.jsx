@@ -1,9 +1,8 @@
 import React from 'react';
-import {BrowserRouter, Switch, Route} from 'react-router-dom';
-import {connect} from 'react-redux';
+import {Router, Switch, Route} from 'react-router-dom';
 import PrivateRoute from "../private-route/private-route";
-import PropTypes from 'prop-types';
-import movieProp from '../movie-card/movie-card.prop';
+import BrowserHistory from '../../browser-history';
+import {AppRoute} from "../../const";
 
 import Main from "../main/main";
 import SignIn from "../sign-in/sign-in";
@@ -14,42 +13,35 @@ import Player from "../player/player";
 import NotFound from "../not-found/not-found";
 
 
-const App = ({movies}) => {
-  return <BrowserRouter>
+const App = () => {
+  return <Router history={BrowserHistory}>
     <Switch>
-      <Route path="/" exact>
-        <Main/>
+      <Route path={AppRoute.ROOT} exact
+        render={({history}) => <Main onMyListClick={() => history.push(`/mylist`)}/>}>
       </Route>
-      <Route path="/login" exact>
+      <Route path={AppRoute.LOGIN} exact>
         <SignIn/>
       </Route>
-      <PrivateRoute path="/mylist" exact
-        render={() => <MyList movies={movies}/>}>
+      <PrivateRoute path={AppRoute.MY_LIST} exact
+        render={() => <MyList/>}>
       </PrivateRoute>
-      <Route path="/films/:id" exact
+      <Route path={AppRoute.MOVIE} exact
         render={({match: {params}}) => <MoviePage {...params}/>}>
       </Route>
-      <PrivateRoute path="/films/:id/review" exact
-        render={() => <AddReview movie={movies[0]}/>}>
+      <PrivateRoute path={AppRoute.REVIEW} exact
+        render={({match: {params}}) => <AddReview {...params}/>}>
       </PrivateRoute>
-      <Route path="/player/:id" exact>
-        <Player movie={movies[0]}/>
+      <Route path={AppRoute.PLAYER} exact
+        render={({match: {params}}) => <Player {...params}/>}>
       </Route>
-      <Route path="/logout">
+      <Route path={AppRoute.LOGOUT}>
       </Route>
       <Route>
         <NotFound/>
       </Route>
     </Switch>
-  </BrowserRouter>;
+  </Router>;
 };
 
-App.propTypes = {
-  movies: PropTypes.arrayOf(movieProp)
-};
 
-const mapStateToProps = (state) => ({
-  movies: state.movies
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
