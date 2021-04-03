@@ -20,3 +20,20 @@ export const snakeToCamel = (object) => {
 
   return adaptedToCamel;
 };
+
+
+export const format = (string, ...args) => {
+  let formatted = string;
+
+  if (typeof args[0] === `object`) {
+    for (let [key, value] of Object.entries(args[0])) {
+      formatted = formatted.replace(key, value);
+    }
+  } else {
+    for (let i = 0; i < args.length; i++) {
+      formatted = formatted.replace(`{` + i + `}`, args[i]);
+    }
+  }
+
+  return formatted;
+};

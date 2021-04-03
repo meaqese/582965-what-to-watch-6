@@ -1,17 +1,20 @@
 import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import movieProp from '../movie-card/movie-card.prop';
+import {fetchMovies} from "../../store/api-actions";
+import {useSelector, useDispatch} from "react-redux";
 
 import MovieList from "../movie-list/movie-list";
 import Tabs from "../tabs/tabs";
-import {fetchMovies} from "../../store/api-actions";
 import Loading from "../loading/loading";
 import NotFound from "../not-found/not-found";
 
 
-const MoviePage = ({id, movies, isDataLoaded, isAuthorized, authInfo, onLoadData}) => {
+const MoviePage = ({id}) => {
+  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+  const {isAuthorized, authInfo} = useSelector((state) => state.USER);
+  const dispatch = useDispatch();
+
   const movieId = movies.findIndex((value) => value.id === +id);
   if (movieId === -1 && isDataLoaded) {
     return <NotFound/>;
@@ -21,7 +24,7 @@ const MoviePage = ({id, movies, isDataLoaded, isAuthorized, authInfo, onLoadData
 
   useEffect(() => {
     if (!isDataLoaded) {
-      onLoadData();
+      dispatch(fetchMovies());
     }
   }, [isDataLoaded]);
 
@@ -117,25 +120,8 @@ const MoviePage = ({id, movies, isDataLoaded, isAuthorized, authInfo, onLoadData
 };
 
 MoviePage.propTypes = {
-  id: PropTypes.string.isRequired,
-  movies: PropTypes.arrayOf(movieProp).isRequired,
-  isDataLoaded: PropTypes.bool.isRequired,
-  isAuthorized: PropTypes.bool.isRequired,
-  authInfo: PropTypes.bool.isRequired,
-  onLoadData: PropTypes.func.isRequired
+  id: PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state) => ({
-  movies: state.movies,
-  isDataLoaded: state.isDataLoaded,
-  isAuthorized: state.isAuthorized,
-  authInfo: state.authInfo
-});
 
-const mapDispatchToProps = (dispatch) => ({
-  onLoadData() {
-    dispatch(fetchMovies());
-  }
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MoviePage);
+export default MoviePage;
