@@ -3,22 +3,22 @@ import {Link} from 'react-router-dom';
 import {useSelector, useDispatch} from "react-redux";
 
 import MovieList from "../movie-list/movie-list";
-import {fetchMovies} from "../../store/api-actions";
 import Loading from "../loading/loading";
+import {fetchFavorites} from "../../store/api-actions";
 
 
 const MyList = () => {
-  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+  const {favorites, isFavoritesLoaded} = useSelector((state) => state.DATA);
   const {authInfo: {avatarUrl}} = useSelector((state) => state.USER);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isDataLoaded) {
-      dispatch(fetchMovies());
+    if (!isFavoritesLoaded) {
+      dispatch(fetchFavorites());
     }
-  }, [isDataLoaded]);
+  }, [isFavoritesLoaded]);
 
-  if (!isDataLoaded) {
+  if (!isFavoritesLoaded) {
     return <Loading/>;
   }
 
@@ -45,7 +45,7 @@ const MyList = () => {
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-        <MovieList movies={movies}/>
+        <MovieList movies={favorites}/>
       </section>
 
       <footer className="page-footer">

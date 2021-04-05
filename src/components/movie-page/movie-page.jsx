@@ -1,17 +1,19 @@
 import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {fetchMovies} from "../../store/api-actions";
+import {addToFavorites, fetchFavorites, fetchMovies, removeFromFavorites} from "../../store/api-actions";
 import {useSelector, useDispatch} from "react-redux";
+import {format} from "../../utils";
 
 import MovieList from "../movie-list/movie-list";
 import Tabs from "../tabs/tabs";
 import Loading from "../loading/loading";
 import NotFound from "../not-found/not-found";
+import {AppRoute} from "../../const";
 
 
-const MoviePage = ({id}) => {
-  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
+const MoviePage = ({id, history}) => {
+  const {movies, favorites, isDataLoaded, isFavoritesLoaded} = useSelector((state) => state.DATA);
   const {isAuthorized, authInfo} = useSelector((state) => state.USER);
   const dispatch = useDispatch();
 
@@ -22,15 +24,31 @@ const MoviePage = ({id}) => {
   const movie = movies[movieId];
   const similarMovies = movies.filter((value) => value.genre === movie.genre && value !== movie);
 
+  const handleAddToMyList = () => {
+    if (movieInFavorites === -1) {
+      dispatch(addToFavorites(movie.id));
+    } else if (movieInFavorites > -1) {
+      dispatch(removeFromFavorites(movie.id));
+    }
+  };
+
   useEffect(() => {
     if (!isDataLoaded) {
       dispatch(fetchMovies());
     }
   }, [isDataLoaded]);
 
+  useEffect(() => {
+    if (!isFavoritesLoaded) {
+      dispatch(fetchFavorites());
+    }
+  }, [isFavoritesLoaded]);
+
   if (!isDataLoaded) {
     return <Loading/>;
   }
+
+  const movieInFavorites = favorites.findIndex((value) => value.id === movie.id);
 
   return <>
     <section className="movie-card movie-card--full">
@@ -52,7 +70,7 @@ const MoviePage = ({id}) => {
 
           <div className="user-block">
             {isAuthorized ? <div className="user-block__avatar">
-              <img src={authInfo.avatarUrl} alt="User avatar" width="63" height="63"/>
+              <img src={authInfo.avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(AppRoute.MY_LIST)}/>
             </div> : <Link to={`/login`} className="btn">Sign In</Link>}
           </div>
         </header>
@@ -66,16 +84,16 @@ const MoviePage = ({id}) => {
             </p>
 
             <div className="movie-card__buttons">
-              <button className="btn btn--play movie-card__button" type="button">
+              <button className="btn btn--play movie-card__button" type="button" onClick={() => history.push(format(AppRoute.PLAYER, {[`:id`]: movie.id}))}>
                 <svg viewBox="0 0 19 19" width="19" height="19">
                   <use xlinkHref="#play-s"/>
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button">
-                <svg viewBox="0 0 19 20" width="19" height="20">
-                  <use xlinkHref="#add"/>
-                </svg>
+              <button className="btn btn--list movie-card__button" type="button" onClick={handleAddToMyList}>
+                {isFavoritesLoaded && <svg viewBox="0 0 19 20" width="19" height="20">
+                  <use xlinkHref={movieInFavorites !== -1 ? `#in-list` : `#add`}/>
+                </svg> }
                 <span>My list</span>
               </button>
               {isAuthorized && <Link to={`/films/${movie.id}/review`} className="btn movie-card__button">Add review</Link>}
@@ -120,7 +138,8 @@ const MoviePage = ({id}) => {
 };
 
 MoviePage.propTypes = {
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  history: PropTypes.object.isRequired
 };
 
 
