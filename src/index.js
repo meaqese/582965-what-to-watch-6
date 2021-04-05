@@ -20,9 +20,8 @@ const store = configureStore({
     getDefaultMiddleware({
       thunk: {
         extraArgument: api
-      },
-      redirect
-    })
+      }
+    }).concat(redirect)
 });
 
 store.dispatch(checkAuth());

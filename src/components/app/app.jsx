@@ -17,7 +17,7 @@ const App = () => {
   return <Router history={BrowserHistory}>
     <Switch>
       <Route path={AppRoute.ROOT} exact
-        render={({history}) => <Main onMyListClick={() => history.push(`/mylist`)}/>}>
+        render={({history}) => <Main onMyListClick={() => history.push(AppRoute.MY_LIST)}/>}>
       </Route>
       <Route path={AppRoute.LOGIN} exact>
         <SignIn/>
@@ -26,7 +26,8 @@ const App = () => {
         render={() => <MyList/>}>
       </PrivateRoute>
       <Route path={AppRoute.MOVIE} exact
-        render={({match: {params}}) => <MoviePage {...params}/>}>
+        render={({match: {params}, history}) =>
+          <MoviePage {...params} history={history}/>}>
       </Route>
       <PrivateRoute path={AppRoute.REVIEW} exact
         render={({match: {params}}) => <AddReview {...params}/>}>
