@@ -1,4 +1,11 @@
-import {setAuthInfo, setAuthStatus, redirectToRoute, loadMovies, loadFavorites, setFavoritesIsLoaded} from "./action";
+import {
+  setAuthInfo,
+  setAuthStatus,
+  redirectToRoute,
+  loadMovies,
+  loadFavorites,
+  addFavorite, removeFavorite
+} from "./action";
 import {APIRoute, AppRoute} from "../const";
 import {format, snakeToCamel} from "../utils";
 
@@ -35,13 +42,13 @@ export const fetchFavorites = () => (dispatch, _getState, api) => {
 };
 
 export const addToFavorites = (id) => (dispatch, _getState, api) => {
-  api.post(format(APIRoute.POST_FAVORITE, id, 1)).then(() => {
-    dispatch(setFavoritesIsLoaded(false));
+  api.post(format(APIRoute.POST_FAVORITE, id, 1)).then(({data}) => {
+    dispatch(addFavorite(snakeToCamel(data)));
   });
 };
 
 export const removeFromFavorites = (id) => (dispatch, _getState, api) => {
-  api.post(format(APIRoute.POST_FAVORITE, id, 0)).then(() => {
-    dispatch(setFavoritesIsLoaded(false));
+  api.post(format(APIRoute.POST_FAVORITE, id, 0)).then(({data}) => {
+    dispatch(removeFavorite(data));
   });
 };

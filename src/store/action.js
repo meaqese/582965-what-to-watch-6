@@ -7,7 +7,8 @@ export const ActionType = {
   LOAD_FAVORITES: `data/loadFavorites`,
   SET_AUTH_STATUS: `user/setAuthStatus`,
   SET_AUTH_INFO: `user/setAuthInfo`,
-  SET_FAVORITES_IS_LOADED: `data/setFavoritesIsLoaded`,
+  ADD_FAVORITE: `data/addFavorite`,
+  REMOVE_FAVORITE: `data/removeFavorite`,
   REDIRECT_TO_ROUTE: `main/redirectToRoute`
 };
 
@@ -24,5 +25,8 @@ export const redirectToRoute = createAction(ActionType.REDIRECT_TO_ROUTE, (url) 
 
 export const loadFavorites = createAction(ActionType.LOAD_FAVORITES, (favorites) => ({payload: favorites}));
 
-export const setFavoritesIsLoaded = createAction(ActionType.SET_FAVORITES_IS_LOADED, (status) => ({payload: status}));
+export const addFavorite = createAction(ActionType.ADD_FAVORITE, (favorite) => ({payload: favorite}));
+
+export const removeFavorite = createAction(ActionType.REMOVE_FAVORITE, (favorite) => ({payload: favorite}));
+
 

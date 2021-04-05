@@ -1,5 +1,5 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {loadFavorites, loadMovies, setFavoritesIsLoaded} from "../../action";
+import {loadFavorites, loadMovies, addFavorite, removeFavorite} from "../../action";
 
 const initialState = {
   movies: [],
@@ -18,7 +18,14 @@ export const data = createReducer(initialState, (builder) => {
     state.favorites = action.payload;
     state.isFavoritesLoaded = true;
   });
-  builder.addCase(setFavoritesIsLoaded, (state, action) => {
-    state.isFavoritesLoaded = action.payload;
+  builder.addCase(addFavorite, (state, action) => {
+    state.favorites = state.favorites.concat(action.payload);
+  });
+  builder.addCase(removeFavorite, (state, action) => {
+    const index = state.favorites.findIndex((value) => value.id === action.payload.id);
+
+    if (index !== -1) {
+      state.favorites = state.favorites.slice(0, index).concat(state.favorites.slice(index + 1));
+    }
   });
 });
