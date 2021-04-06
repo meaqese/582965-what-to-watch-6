@@ -1,8 +1,24 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import movieProp from '../movie-card/movie-card.prop';
 import {Tab} from "../../const";
+import {fetchComments} from "../../store/api-actions";
+import Loading from "../loading/loading";
+import {useDispatch} from "react-redux";
 
 const getTabContent = (movie, activeTab) => {
+  const [comments, setComments] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!comments) {
+      dispatch(fetchComments(movie.id, setComments));
+    }
+  }, [comments]);
+
+  const minutesToTime = (minutes) => {
+    return `${Math.floor(minutes / 60)}h ${Math.floor(minutes % 60)}m`;
+  };
+
   switch (activeTab) {
     case Tab.OVERVIEW:
       return <>
@@ -41,7 +57,7 @@ const getTabContent = (movie, activeTab) => {
           <div className="movie-card__text-col">
             <p className="movie-card__details-item">
               <strong className="movie-card__details-name">Run Time</strong>
-              <span className="movie-card__details-value">1h 39m</span>
+              <span className="movie-card__details-value">{minutesToTime(movie.runTime)}</span>
             </p>
             <p className="movie-card__details-item">
               <strong className="movie-card__details-name">Genre</strong>
@@ -55,100 +71,34 @@ const getTabContent = (movie, activeTab) => {
         </div>
       </>;
     case Tab.REVIEWS:
+      if (!comments) {
+        return <Loading/>;
+      } else if (comments.length === 0) {
+        return <p>Nothing to show...</p>;
+      }
+
       return <>
         <div className="movie-card__reviews movie-card__row">
           <div className="movie-card__reviews-col">
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">Discerning travellers and Wes Anderson fans will luxuriate in the glorious
-                  Mittel-European kitsch of one of the director&apos;s funniest and most exquisitely designed movies in
-                  years.</p>
+            {comments.map((comment) => (
+              <div className="review" key={comment.name + comment.id}>
+                <blockquote className="review__quote">
+                  <p className="review__text">{comment.comment}</p>
 
-                <footer className="review__details">
-                  <cite className="review__author">Kate Muir</cite>
-                  <time className="review__date" dateTime="2016-12-24">December 24, 2016</time>
-                </footer>
-              </blockquote>
+                  <footer className="review__details">
+                    <cite className="review__author">{comment.user.name}</cite>
+                    <time className="review__date" dateTime="2016-12-24">December 24, 2016</time>
+                  </footer>
+                </blockquote>
 
-              <div className="review__rating">8,9</div>
-            </div>
-
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">Anderson&apos;s films are too precious for some, but for those of us willing to
-                  lose ourselves in them, they&apos;re a delight. &quot;The Grand Budapest Hotel&quot; is no different, except that he
-                  has added a hint of gravitas to the mix, improving the recipe.</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">Bill Goodykoontz</cite>
-                  <time className="review__date" dateTime="2015-11-18">November 18, 2015</time>
-                </footer>
-              </blockquote>
-
-              <div className="review__rating">8,0</div>
-            </div>
-
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">I didn&apos;t find it amusing, and while I can appreciate the creativity, it&apos;s an
-                  hour and 40 minutes I wish I could take back.</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">Amanda Greever</cite>
-                  <time className="review__date" dateTime="2015-11-18">November 18, 2015</time>
-                </footer>
-              </blockquote>
-
-              <div className="review__rating">8,0</div>
-            </div>
-          </div>
-          <div className="movie-card__reviews-col">
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">The mannered, madcap proceedings are often delightful, occasionally silly,
-                  and here and there, gruesome and/or heartbreaking.</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">Matthew Lickona</cite>
-                  <time className="review__date" dateTime="2016-12-20">December 20, 2016</time>
-                </footer>
-              </blockquote>
-
-              <div className="review__rating">7,2</div>
-            </div>
-
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">It is certainly a magical and childlike way of storytelling, even if the
-                  content is a little more adult.</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">Paula Fleri-Soler</cite>
-                  <time className="review__date" dateTime="2016-12-20">December 20, 2016</time>
-                </footer>
-              </blockquote>
-
-              <div className="review__rating">7,6</div>
-            </div>
-
-            <div className="review">
-              <blockquote className="review__quote">
-                <p className="review__text">It is certainly a magical and childlike way of storytelling, even if the
-                  content is a little more adult.</p>
-
-                <footer className="review__details">
-                  <cite className="review__author">Paula Fleri-Soler</cite>
-                  <time className="review__date" dateTime="2016-12-20">December 20, 2016</time>
-                </footer>
-              </blockquote>
-
-              <div className="review__rating">7,0</div>
-            </div>
+                <div className="review__rating">{comment.rating}</div>
+              </div>
+            ))}
           </div>
         </div>
       </>;
   }
-  return <></>;
+  return null;
 };
 
 const Tabs = ({movie}) => {

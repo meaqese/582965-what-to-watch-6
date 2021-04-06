@@ -1,17 +1,45 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
+import {useSelector, useDispatch} from "react-redux";
+import {AppRoute} from "../../const";
+import {format} from "../../utils";
 import PropTypes from 'prop-types';
-import {useSelector} from "react-redux";
 
 import GenreList from "../genre-list/genre-list";
+import {addToFavorites, fetchPromoMovie, removeFromFavorites} from "../../store/api-actions";
+import Loading from "../loading/loading";
+import {useFavorites} from "../../hooks/useFavorites";
 
-const Main = ({onMyListClick}) => {
+const Main = ({history}) => {
   const {isAuthorized, authInfo: {avatarUrl}} = useSelector((state) => state.USER);
+  const {promo, isPromoMovieLoaded} = useSelector((state) => state.DATA);
+  const [isFavoritesLoaded, favorites] = useFavorites();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isPromoMovieLoaded) {
+      dispatch(fetchPromoMovie());
+    }
+  }, [isPromoMovieLoaded]);
+
+  if (!isPromoMovieLoaded) {
+    return <Loading/>;
+  }
+
+  const movieInFavorites = favorites.findIndex((value) => value.id === promo.id);
+
+  const handleAddToMyList = () => {
+    if (movieInFavorites === -1) {
+      dispatch(addToFavorites(promo.id));
+    } else if (movieInFavorites > -1) {
+      dispatch(removeFromFavorites(promo.id));
+    }
+  };
 
   return <>
     <section className="movie-card">
       <div className="movie-card__bg">
-        <img src="img/bg-the-grand-budapest-hotel.jpg" alt="The Grand Budapest Hotel"/>
+        <img src={promo.backgroundImage} alt={promo.name}/>
       </div>
 
       <h1 className="visually-hidden">WTW</h1>
@@ -27,7 +55,7 @@ const Main = ({onMyListClick}) => {
 
         <div className="user-block">
           {(isAuthorized === true) ? <div className="user-block__avatar">
-            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={onMyListClick}/>
+            <img src={avatarUrl} alt="User avatar" width="63" height="63" onClick={() => history.push(AppRoute.MY_LIST)}/>
           </div> : <Link to={`/login`} className="btn">Sign In</Link>}
         </div>
       </header>
@@ -35,28 +63,28 @@ const Main = ({onMyListClick}) => {
       <div className="movie-card__wrap">
         <div className="movie-card__info">
           <div className="movie-card__poster">
-            <img src="img/the-grand-budapest-hotel-poster.jpg" alt="The Grand Budapest Hotel poster" width="218"
+            <img src={promo.posterImage} alt={promo.name + `poster`} width="218"
               height="327"/>
           </div>
 
           <div className="movie-card__desc">
-            <h2 className="movie-card__title">The Grand Budapest Hotel</h2>
+            <h2 className="movie-card__title">{promo.name}</h2>
             <p className="movie-card__meta">
-              <span className="movie-card__genre">Drama</span>
-              <span className="movie-card__year">2014</span>
+              <span className="movie-card__genre">{promo.genre}</span>
+              <span className="movie-card__year">{promo.released}</span>
             </p>
 
             <div className="movie-card__buttons">
-              <button className="btn btn--play movie-card__button" type="button">
+              <button className="btn btn--play movie-card__button" type="button" onClick={() => history.push(format(AppRoute.PLAYER, {[`:id`]: promo.id}))}>
                 <svg viewBox="0 0 19 19" width="19" height="19">
                   <use xlinkHref="#play-s"/>
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button" onClick={onMyListClick}>
-                <svg viewBox="0 0 19 20" width="19" height="20">
-                  <use xlinkHref="#add"/>
-                </svg>
+              <button className="btn btn--list movie-card__button" type="button" onClick={handleAddToMyList}>
+                {isFavoritesLoaded && <svg viewBox="0 0 19 20" width="19" height="20">
+                  <use xlinkHref={movieInFavorites !== -1 ? `#in-list` : `#add`}/>
+                </svg> }
                 <span>My list</span>
               </button>
             </div>
@@ -90,7 +118,7 @@ const Main = ({onMyListClick}) => {
 };
 
 Main.propTypes = {
-  onMyListClick: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 };
 
 

@@ -1,11 +1,13 @@
 import {createReducer} from "@reduxjs/toolkit";
-import {loadFavorites, loadMovies, addFavorite, removeFavorite} from "../../action";
+import {loadFavorites, loadMovies, addFavorite, removeFavorite, loadPromoMovie} from "../../action";
 
 const initialState = {
+  promo: {},
   movies: [],
   favorites: [],
   isDataLoaded: false,
-  isFavoritesLoaded: false
+  isFavoritesLoaded: false,
+  isPromoMovieLoaded: false
 };
 
 
@@ -13,6 +15,10 @@ export const data = createReducer(initialState, (builder) => {
   builder.addCase(loadMovies, (state, action) => {
     state.movies = action.payload;
     state.isDataLoaded = true;
+  });
+  builder.addCase(loadPromoMovie, (state, action) => {
+    state.promo = action.payload;
+    state.isPromoMovieLoaded = true;
   });
   builder.addCase(loadFavorites, (state, action) => {
     state.favorites = action.payload;

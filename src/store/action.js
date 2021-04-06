@@ -3,6 +3,7 @@ import {createAction} from "@reduxjs/toolkit";
 
 export const ActionType = {
   CHANGE_GENRE: `movies/changeGenre`,
+  LOAD_PROMO: `data/loadPromo`,
   LOAD_MOVIES: `data/loadMovies`,
   LOAD_FAVORITES: `data/loadFavorites`,
   SET_AUTH_STATUS: `user/setAuthStatus`,
@@ -16,6 +17,8 @@ export const ActionType = {
 export const changeGenre = createAction(ActionType.CHANGE_GENRE, (genre) => ({payload: genre}));
 
 export const loadMovies = createAction(ActionType.LOAD_MOVIES, (movies) => ({payload: movies}));
+
+export const loadPromoMovie = createAction(ActionType.LOAD_PROMO, (movie) => ({payload: movie}));
 
 export const setAuthStatus = createAction(ActionType.SET_AUTH_STATUS, (status) => ({payload: status}));
 

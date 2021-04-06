@@ -17,7 +17,7 @@ const App = () => {
   return <Router history={BrowserHistory}>
     <Switch>
       <Route path={AppRoute.ROOT} exact
-        render={({history}) => <Main onMyListClick={() => history.push(AppRoute.MY_LIST)}/>}>
+        render={({history}) => <Main history={history}/>}>
       </Route>
       <Route path={AppRoute.LOGIN} exact>
         <SignIn/>

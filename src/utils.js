@@ -37,3 +37,4 @@ export const format = (string, ...args) => {
 
   return formatted;
 };
+
