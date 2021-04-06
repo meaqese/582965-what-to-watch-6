@@ -1,28 +1,36 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {addToFavorites, fetchFavorites, fetchMovies, removeFromFavorites} from "../../store/api-actions";
+import {addToFavorites, removeFromFavorites} from "../../store/api-actions";
 import {useSelector, useDispatch} from "react-redux";
 import {format} from "../../utils";
+import {useFavorites} from "../../hooks/useFavorites";
+import {useMovies} from "../../hooks/useMovies";
+import {AppRoute} from "../../const";
 
 import MovieList from "../movie-list/movie-list";
 import Tabs from "../tabs/tabs";
 import Loading from "../loading/loading";
 import NotFound from "../not-found/not-found";
-import {AppRoute} from "../../const";
 
 
 const MoviePage = ({id, history}) => {
-  const {movies, favorites, isDataLoaded, isFavoritesLoaded} = useSelector((state) => state.DATA);
   const {isAuthorized, authInfo} = useSelector((state) => state.USER);
+  const [isDataLoaded, movies] = useMovies();
+  const [isFavoritesLoaded, favorites] = useFavorites();
   const dispatch = useDispatch();
 
   const movieId = movies.findIndex((value) => value.id === +id);
-  if (movieId === -1 && isDataLoaded) {
+  if (!isDataLoaded) {
+    return <Loading/>;
+  } else if (movieId === -1) {
     return <NotFound/>;
   }
+
+
   const movie = movies[movieId];
   const similarMovies = movies.filter((value) => value.genre === movie.genre && value !== movie);
+  const movieInFavorites = favorites.findIndex((value) => value.id === movie.id);
 
   const handleAddToMyList = () => {
     if (movieInFavorites === -1) {
@@ -31,24 +39,6 @@ const MoviePage = ({id, history}) => {
       dispatch(removeFromFavorites(movie.id));
     }
   };
-
-  useEffect(() => {
-    if (!isDataLoaded) {
-      dispatch(fetchMovies());
-    }
-  }, [isDataLoaded]);
-
-  useEffect(() => {
-    if (!isFavoritesLoaded) {
-      dispatch(fetchFavorites());
-    }
-  }, [isFavoritesLoaded]);
-
-  if (!isDataLoaded) {
-    return <Loading/>;
-  }
-
-  const movieInFavorites = favorites.findIndex((value) => value.id === movie.id);
 
   return <>
     <section className="movie-card movie-card--full">
