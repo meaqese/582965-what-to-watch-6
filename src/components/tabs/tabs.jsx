@@ -4,16 +4,32 @@ import {Tab} from "../../const";
 import {fetchComments} from "../../store/api-actions";
 import Loading from "../loading/loading";
 import {useDispatch} from "react-redux";
+import dayjs from "dayjs";
 
 const getTabContent = (movie, activeTab) => {
   const [comments, setComments] = useState(null);
   const dispatch = useDispatch();
 
+  const getRatingDescription = (rating) => {
+    switch (rating) {
+      case rating >= 8:
+        return `Awesome`;
+      case rating >= 6:
+        return `Very good`;
+      case rating >= 4:
+        return `Good`;
+      case rating >= 2:
+        return `Normal`;
+      default:
+        return `Bad`;
+    }
+  };
+
   useEffect(() => {
     if (!comments) {
       dispatch(fetchComments(movie.id, setComments));
     }
-  }, [comments]);
+  }, [movie]);
 
   const minutesToTime = (minutes) => {
     return `${Math.floor(minutes / 60)}h ${Math.floor(minutes % 60)}m`;
@@ -25,7 +41,7 @@ const getTabContent = (movie, activeTab) => {
         <div className="movie-rating">
           <div className="movie-rating__score">{movie.rating}</div>
           <p className="movie-rating__meta">
-            <span className="movie-rating__level">Very good</span>
+            <span className="movie-rating__level">{getRatingDescription(movie.rating)}</span>
             <span className="movie-rating__count">{movie.scoresCount} ratings</span>
           </p>
         </div>
@@ -87,7 +103,7 @@ const getTabContent = (movie, activeTab) => {
 
                   <footer className="review__details">
                     <cite className="review__author">{comment.user.name}</cite>
-                    <time className="review__date" dateTime="2016-12-24">December 24, 2016</time>
+                    <time className="review__date" dateTime={comment.date}>{dayjs(comment.date).format(`MMMM D, YYYY`)}</time>
                   </footer>
                 </blockquote>
 
