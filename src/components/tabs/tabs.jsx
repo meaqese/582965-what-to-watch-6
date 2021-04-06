@@ -26,9 +26,7 @@ const getTabContent = (movie, activeTab) => {
   };
 
   useEffect(() => {
-    if (!comments) {
-      dispatch(fetchComments(movie.id, setComments));
-    }
+    dispatch(fetchComments(movie.id, setComments));
   }, [movie]);
 
   const minutesToTime = (minutes) => {
@@ -97,7 +95,7 @@ const getTabContent = (movie, activeTab) => {
         <div className="movie-card__reviews movie-card__row">
           <div className="movie-card__reviews-col">
             {comments.map((comment) => (
-              <div className="review" key={comment.name + comment.id}>
+              <div className="review" key={comment.id}>
                 <blockquote className="review__quote">
                   <p className="review__text">{comment.comment}</p>
 
