@@ -29,7 +29,7 @@ const getTabContent = (movie, activeTab) => {
     dispatch(fetchComments(movie.id, setComments));
   }, [movie]);
 
-  const minutesToTime = (minutes) => {
+  const convertMinutesToTime = (minutes) => {
     return `${Math.floor(minutes / 60)}h ${Math.floor(minutes % 60)}m`;
   };
 
@@ -71,7 +71,7 @@ const getTabContent = (movie, activeTab) => {
           <div className="movie-card__text-col">
             <p className="movie-card__details-item">
               <strong className="movie-card__details-name">Run Time</strong>
-              <span className="movie-card__details-value">{minutesToTime(movie.runTime)}</span>
+              <span className="movie-card__details-value">{convertMinutesToTime(movie.runTime)}</span>
             </p>
             <p className="movie-card__details-item">
               <strong className="movie-card__details-name">Genre</strong>
@@ -128,9 +128,9 @@ const Tabs = ({movie}) => {
     <div className="movie-card__desc">
       <nav className="movie-nav movie-card__nav">
         <ul className="movie-nav__list">
-          { Object.values(Tab).map((value, index) => {
+          { Object.values(Tab).map((value) => {
             const isActiveTab = (value === activeTab);
-            return <li className={`movie-nav__item ${isActiveTab ? ` movie-nav__item--active` : ``}`} key={value + index}>
+            return <li className={`movie-nav__item ${isActiveTab ? ` movie-nav__item--active` : ``}`} key={value}>
               <a href="#" className="movie-nav__link"
                 onClick={(evt) => handleClick(evt, value)}>{value}
               </a>

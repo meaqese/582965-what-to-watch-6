@@ -1,10 +1,18 @@
 import React, {useRef} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {login} from "../../store/api-actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRoute} from "../../const";
 
 
 const SignIn = () => {
+  const {isAuthorized} = useSelector((state) => state.USER);
+  const history = useHistory();
+
+  if (isAuthorized) {
+    history.push(AppRoute.ROOT);
+  }
+
   const dispatch = useDispatch();
 
   const emailRef = useRef();

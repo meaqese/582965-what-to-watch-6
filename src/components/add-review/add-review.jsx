@@ -1,9 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {Link} from 'react-router-dom';
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRoute} from "../../const";
 import {format} from "../../utils";
-import {fetchMovies} from "../../store/api-actions";
+import {useMovies} from "../../hooks/useMovies";
 import PropTypes from 'prop-types';
 
 import AddReviewForm from "../add-review-form/add-review-form";
@@ -11,20 +11,14 @@ import Loading from "../loading/loading";
 
 
 const AddReview = ({id}) => {
-  const {movies, isDataLoaded} = useSelector((state) => state.DATA);
-  const dispatch = useDispatch();
-
-  const movie = movies.filter((value) => value.id === +id)[0];
-
-  useEffect(() => {
-    if (!isDataLoaded) {
-      dispatch(fetchMovies());
-    }
-  }, [isDataLoaded]);
+  const [isDataLoaded, movies] = useMovies();
+  const {authInfo} = useSelector((state) => state.USER);
 
   if (!isDataLoaded) {
     return <Loading/>;
   }
+
+  const movie = movies.filter((value) => value.id === +id)[0];
 
   return (
     <section className="movie-card movie-card--full">
@@ -57,7 +51,7 @@ const AddReview = ({id}) => {
 
           <div className="user-block">
             <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63"/>
+              <img src={authInfo.avatarUrl} alt="User avatar" width="63" height="63"/>
             </div>
           </div>
         </header>
@@ -68,7 +62,7 @@ const AddReview = ({id}) => {
       </div>
 
       <div className="add-review">
-        <AddReviewForm/>
+        <AddReviewForm id={movie.id}/>
       </div>
     </section>
   );

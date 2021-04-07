@@ -80,13 +80,15 @@ const MoviePage = ({id, history}) => {
                 </svg>
                 <span>Play</span>
               </button>
-              <button className="btn btn--list movie-card__button" type="button" onClick={handleAddToMyList}>
-                {isFavoritesLoaded && <svg viewBox="0 0 19 20" width="19" height="20">
-                  <use xlinkHref={movieInFavorites !== -1 ? `#in-list` : `#add`}/>
-                </svg> }
-                <span>My list</span>
-              </button>
-              {isAuthorized && <Link to={`/films/${movie.id}/review`} className="btn movie-card__button">Add review</Link>}
+              {isAuthorized && <>
+                <button className="btn btn--list movie-card__button" type="button" onClick={handleAddToMyList}>
+                  {isFavoritesLoaded && <svg viewBox="0 0 19 20" width="19" height="20">
+                    <use xlinkHref={movieInFavorites !== -1 ? `#in-list` : `#add`}/>
+                  </svg> }
+                  <span>My list</span>
+                </button>
+                <Link to={`/films/${movie.id}/review`} className="btn movie-card__button">Add review</Link>
+              </>}
             </div>
           </div>
         </div>
