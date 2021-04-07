@@ -10,7 +10,8 @@ export const ActionType = {
   SET_AUTH_INFO: `user/setAuthInfo`,
   ADD_FAVORITE: `data/addFavorite`,
   REMOVE_FAVORITE: `data/removeFavorite`,
-  REDIRECT_TO_ROUTE: `main/redirectToRoute`
+  REDIRECT_TO_ROUTE: `main/redirectToRoute`,
+  SET_COMMENTS_ERROR: `processes/commentsError`
 };
 
 
@@ -32,4 +33,4 @@ export const addFavorite = createAction(ActionType.ADD_FAVORITE, (favorite) => (
 
 export const removeFavorite = createAction(ActionType.REMOVE_FAVORITE, (favorite) => ({payload: favorite}));
 
-
+export const setCommentsError = createAction(ActionType.SET_COMMENTS_ERROR, (error) => ({payload: error}));

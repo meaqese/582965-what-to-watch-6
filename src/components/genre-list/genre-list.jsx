@@ -34,8 +34,8 @@ const GenreList = () => {
 
   return <>
     <ul className="catalog__genres-list">
-      {genres.map((value, index) => (
-        <li className={`catalog__genres-item ${ value === genre ? `catalog__genres-item--active` : ``}`} key={value + index}>
+      {genres.map((value) => (
+        <li className={`catalog__genres-item ${ value === genre ? `catalog__genres-item--active` : ``}`} key={value}>
           <a href="#" className="catalog__genres-link" onClick={(evt) => handleClick(evt, value)}>{value}</a>
         </li>
       ))}

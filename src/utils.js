@@ -1,4 +1,4 @@
-export const snakeToCamel = (object) => {
+export const convertSnakeToCamel = (object) => {
   const countOf = (str, symbol) => {
     const regex = new RegExp(symbol + `*`, `g`);
     return (symbol.match(regex) || []).length;

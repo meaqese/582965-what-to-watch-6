@@ -1,10 +1,45 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
+import PropTypes from 'prop-types';
+import {useDispatch, useSelector} from "react-redux";
 
-const AddReviewForm = () => {
-  const [review, setReview] = useState(``);
+import {addComment} from "../../store/api-actions";
+import {setCommentsError} from "../../store/action";
+
+
+const AddReviewForm = ({id}) => {
+  const [isReady, setReady] = useState(false);
+  const [data, setData] = useState({});
+  const {errorComments} = useSelector((state) => state.PROCESSES);
+  const dispatch = useDispatch();
+
+  const formRef = useRef();
+
+  const handleFormChange = () => {
+    const formData = new FormData(formRef.current);
+
+    const rating = formData.get(`rating`);
+    const reviewText = formData.get(`review-text`);
+
+    if (rating && (reviewText.length >= 50 && reviewText.length <= 400)) {
+      setReady(true);
+      setData({rating: +rating, comment: reviewText});
+    } else {
+      setReady(false);
+    }
+  };
+
+  const handleFormSubmit = (evt) => {
+    evt.preventDefault();
+
+    if (isReady) {
+      dispatch(addComment(id, data));
+    }
+  };
+
 
   return (
-    <form action="#" className="add-review__form">
+    <form className="add-review__form" ref={formRef} onChange={handleFormChange} onSubmit={handleFormSubmit}>
+      {errorComments}
       <div className="rating">
         <div className="rating__stars">
           <input className="rating__input" id="star-1" type="radio" name="rating" value="1"/>
@@ -40,13 +75,17 @@ const AddReviewForm = () => {
       </div>
 
       <div className="add-review__text">
-        <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text" value={review} onChange={(evt) => setReview(evt.target.value)}/>
+        <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text"/>
         <div className="add-review__submit">
-          <button className="add-review__btn" type="submit">Post</button>
+          <button className="add-review__btn" type="submit" disabled={!isReady}>Post</button>
         </div>
       </div>
     </form>
   );
+};
+
+AddReviewForm.propTypes = {
+  id: PropTypes.number.isRequired
 };
 
 export default AddReviewForm;

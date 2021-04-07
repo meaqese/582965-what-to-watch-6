@@ -20,7 +20,7 @@ const Player = ({id}) => {
   const videoRef = useRef();
   const playerRef = useRef();
 
-  const secondsToTime = (sec) => {
+  const convertSecondsToTime = (sec) => {
     const seconds = Math.round(sec);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor(Math.floor(seconds % 3600) / 60);
@@ -93,10 +93,10 @@ const Player = ({id}) => {
       <div className="player__controls">
         <div className="player__controls-row">
           <div className="player__time">
-            <progress className="player__progress" value="30" max="100"/>
+            <progress className="player__progress" value={getTimeLineWidth()} max="100"/>
             <div className="player__toggler" style={{left: `${getTimeLineWidth()}%`}}>Toggler</div>
           </div>
-          <div className="player__time-value">{secondsToTime(timeLeft)}</div>
+          <div className="player__time-value">{convertSecondsToTime(timeLeft)}</div>
         </div>
 
         <div className="player__controls-row">
